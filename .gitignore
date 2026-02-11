@@ -1,6 +1,6 @@
-# =====================
-# Node / Next.js
-# =====================
+# =========================
+# NODE / NEXT JS
+# =========================
 node_modules/
 .next/
 out/
@@ -10,61 +10,40 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+.vercel
 
-# environment files
+# env
 .env
 .env.local
-.env.development
-.env.production
+.env.development.local
+.env.production.local
 
-# logs
-logs
-*.log
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# =====================
-# Python / FastAPI
-# =====================
+# =========================
+# PYTHON / FASTAPI
+# =========================
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-*.db
 *.sqlite3
+*.db
 
 # virtual env
 venv/
 env/
-ENV/
+.venv/
 
-# python dotenv
+# python env files
 .env
 
-# =====================
-# Audio/temp files
-# =====================
-temp_audio/
-uploads/
-*.mp3
-*.wav
-*.webm
-
-# =====================
-# VS Code
-# =====================
-.vscode/
-
-# =====================
-# Mac
-# =====================
+# =========================
+# OS FILES
+# =========================
 .DS_Store
-
-# =====================
-# Windows
-# =====================
 Thumbs.db
-.env
+
+# =========================
+# AUDIO TEMP (your project)
+# =========================
+temp_audio/
 .env.local
