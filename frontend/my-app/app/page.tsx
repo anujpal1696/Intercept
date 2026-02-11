@@ -88,7 +88,9 @@ export default function Home() {
   // SPEECH INPUT
   const startRecording = () => {
     const SpeechRecognition =
-      window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+  (window as any).SpeechRecognition ||
+  (window as any).webkitSpeechRecognition;
+
 
     if (!SpeechRecognition) {
       alert("Voice input not supported in browser");
