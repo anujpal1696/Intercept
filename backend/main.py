@@ -5,12 +5,12 @@ import os
 import uuid
 
 from ai import ask_ai
-from sessions import create_session, add_message, get_history
+from sessions import create_session, add_message, get_history, get_key
 from voice import speech_to_text, text_to_speech
 
 app = FastAPI()
 
-# ===== CORS (VERY IMPORTANT) =====
+# ===== CORS =====
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -25,7 +25,7 @@ if not os.path.exists("temp_audio"):
 
 # ===== START INTERVIEW =====
 @app.post("/start")
-def start(profile: str = Form(...), job: str = Form(...)):
+def start(profile: str = Form(...), job: str = Form(...), api_key: str = Form(...)):
 
     system_prompt = f"""
 You are a professional AI interviewer.
@@ -40,7 +40,8 @@ Rules:
 - Give hiring decision
 """
 
-    session_id = create_session(system_prompt)
+    # store api key inside session
+    session_id = create_session(system_prompt, api_key)
 
     first_msg = "Interview starting. Tell me about yourself."
     add_message(session_id, "assistant", first_msg)
@@ -69,7 +70,9 @@ async def voice(session_id: str = Form(...), file: UploadFile = File(...)):
     add_message(session_id, "user", user_text)
 
     history = get_history(session_id)
-    reply = ask_ai(history)
+    api_key = get_key(session_id)  # get user's gemini key
+
+    reply = ask_ai(history, api_key)
 
     add_message(session_id, "assistant", reply)
 
@@ -81,19 +84,16 @@ async def voice(session_id: str = Form(...), file: UploadFile = File(...)):
         "audio": f"/audio/{filename}"
     }
 
-# ===== GET AUDIO =====
-@app.get("/audio/{filename}")
-def get_audio(filename: str):
-    path = os.path.join("temp_audio", filename)
-    return FileResponse(path, media_type="audio/mpeg")
-
+# ===== TEXT CHAT =====
 @app.post("/text")
 def text_chat(session_id: str = Form(...), text: str = Form(...)):
 
     add_message(session_id, "user", text)
 
     history = get_history(session_id)
-    reply = ask_ai(history)
+    api_key = get_key(session_id)  # user's key
+
+    reply = ask_ai(history, api_key)
 
     add_message(session_id, "assistant", reply)
 
@@ -103,3 +103,9 @@ def text_chat(session_id: str = Form(...), text: str = Form(...)):
         "ai_text": reply,
         "audio": f"/audio/{filename}"
     }
+
+# ===== GET AUDIO =====
+@app.get("/audio/{filename}")
+def get_audio(filename: str):
+    path = os.path.join("temp_audio", filename)
+    return FileResponse(path, media_type="audio/mpeg")

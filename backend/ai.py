@@ -1,15 +1,17 @@
 import google.generativeai as genai
-import os
-from dotenv import load_dotenv
 
-load_dotenv()
+def ask_ai(messages, api_key):
+    """
+    Uses USER provided Gemini API key
+    """
 
-genai.configure(api_key="AIzaSyAz8I5_8PvpaWVjvMKr6M8R4oS_UGiQ0eo")
+    # configure using user's key
+    genai.configure(api_key=api_key)
 
-model = genai.GenerativeModel("gemini-3-flash-preview",)
+    # use stable fast model
+    model = genai.GenerativeModel( "gemini-3-flash-preview")
 
-def ask_ai(messages):
-    # convert chat history into text
+    # convert history → conversation
     convo = ""
     for m in messages:
         role = "Interviewer" if m["role"] == "assistant" else "Candidate"
@@ -21,7 +23,8 @@ You are a professional job interviewer.
 Rules:
 - Ask only one question at a time
 - Ask based on candidate answers
-- After 5 questions give score and hiring decision
+- Be realistic like real interviewer
+- After 5 questions give score + hiring decision
 
 Interview:
 {convo}
