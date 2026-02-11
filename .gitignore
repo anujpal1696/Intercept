@@ -66,3 +66,5 @@ uploads/
 # Windows
 # =====================
 Thumbs.db
+.env
+.env.local

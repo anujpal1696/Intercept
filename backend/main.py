@@ -13,11 +13,12 @@ app = FastAPI()
 # ===== CORS =====
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # for now allow all
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # ===== create folder =====
 if not os.path.exists("temp_audio"):
